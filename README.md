@@ -1,4 +1,4 @@
-# AprsWeatherStation
+# Arduino Aprs Weather Station
 
 This project creates a simple Aprs Weather Station for ham radio. In this project I used:
 

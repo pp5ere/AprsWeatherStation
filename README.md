@@ -15,6 +15,7 @@ This project creates a simple Aprs Weather Station for ham radio. In this projec
 To run this code you need to write some important things, like your ssid and password wifi
 
 ...
+
 const char* ssid     = "";
 const char* password = "";
 ...
@@ -22,6 +23,7 @@ const char* password = "";
 Then you need to configure the main IP from the web service and network data addresses below
 
 ...
+
 IPAddress ip(192,168,1,35); //sevice IP
 IPAddress gate(192,168,1,1); //gateway IP
 IPAddress sub(255,255,255,0); //subnet mask
@@ -30,12 +32,14 @@ IPAddress sub(255,255,255,0); //subnet mask
 The web service is listening on port 80, if you want another one change the line:
 
 ...
+
 ESP8266WebServer server(80);
 ...
 
 Then you need to inform some aprs network data, like callsign (USER), password (PAS), latitude (LAT), longitude (LON) and comment (COMMENT). If you want, change the server aprs and port
 
 ...
+
 const String USER    = "PP5ERE-13";
 const String PAS     = "00000";
 const String LAT     = "2736.01S";
@@ -48,18 +52,21 @@ const int    PORT    = 14579;
 If you want to check the weather data, you can access the main ip address on your preferential browser and check the weather page, like the example below:
 
 ...
+
 http://192.168.1.35
 ...
 
 If you want to get data from ESP-01 to implement some application, you need access the URI weather. 
 
 ...
+
 http://192.168.1.35/weather
 ...
 
 This URI is http get request and show a json data:
 
 ...
+
 {"TempC":26.53,"TempF":79.75,"Hum":69.25,"Pres":1023.99,"Alt":-64485.50}
 ...
 

@@ -62,4 +62,4 @@ This URI is http get request and show a json data:
 ```
 {"TempC":26.53,"TempF":79.75,"Hum":69.25,"Pres":1023.99,"Alt":-64485.50}
 ```
-![Legenda](/blob/master/esp-01_BMP280.png)
+![Legenda](https://raw.githubusercontent.com/pp5ere/AprsWeatherStation/master/esp-01_BMP280.png)

@@ -65,3 +65,5 @@ This URI is http get request and show a json data:
 # How I built the Arduino Sketch
 
 ![Legenda](https://raw.githubusercontent.com/pp5ere/AprsWeatherStation/master/esp-01_BMP280.png)
+
+All you need to do is build the circuit and record the program on esp-01

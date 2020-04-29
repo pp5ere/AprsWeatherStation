@@ -82,7 +82,7 @@ All you need to do is build the circuit and record the program on esp-01
 
 # Telnet Debug with RemoteDebug
 
-If you have some problem, you can see what's happening inside your Esp-01 using telnet port. To do this, just access your favorite terminal and type:
+If you have some problem, you can see what's going on inside your Esp-01 using telnet port. To do this, just access your favorite terminal and type:
 
 ```
 $ telnet 192.168.1.35

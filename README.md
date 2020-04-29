@@ -78,7 +78,7 @@ This URI is http get request and show a json data:
 
 ![Legenda](https://raw.githubusercontent.com/pp5ere/AprsWeatherStation/master/esp-01_BMP280.png)
 
-All you need to do is build the circuit and record the program on esp-01
+All you need to do is build this circuit and record the program on Esp-01
 
 # Telnet Debug with RemoteDebug
 

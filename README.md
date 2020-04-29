@@ -10,13 +10,13 @@ This project creates a simple Aprs Weather Station for ham radio. In this projec
 
 <img src="https://img2.bgxcdn.com/thumb/large/oaupload/banggood/images/35/E5/89466d3a-fe96-42db-ac23-28625ecabb9d.jpg" width="400" height="400"/>
 
-## Details
+## Details before record the code
 
-To run this code you need to write some important things, like your ssid and password wifi
+Before record this code you need to write some important things, like your ssid and password wifi
 
 ```
-const char* ssid     = "";
-const char* password = ""; 	
+const char* ssid     = "pp5ere"; //put your wifi ssid here
+const char* password = "000000"; //put your wifi password here
 ```
 
 Then you need to configure the main IP from the web service and network data addresses below
@@ -45,16 +45,28 @@ const String SERVER  = "brazil.aprs2.net";
 const int    PORT    = 14579;
 ```
 
-If you want to check the weather data, you can access the main ip address on your preferential browser and check the weather page, like the example below:
+If you want to check the weather data in real time, you need to set the variable "Domain" to your local Ip, same as main Ip
+
+```
+String Domain = "http://192.168.1.35";
+```
+
+You can access the main IP address in your favorite browser and check the weather page, as in the example below:
 
 ```
 http://192.168.1.35
 ```
 
+If you want to access this page on the Web, you need to put your domain address or your fixed Ip
+
+```
+String Domain = "http://pp5ere.sytes.net:8000";
+```
+
 If you want to get data from ESP-01 to implement some application, you need access the URI weather. 
 
 ```
-http://192.168.1.35/weather
+http://192.168.1.35/weather or http://pp5ere.sytes.net:8000/weather
 ```
 
 This URI is http get request and show a json data:
@@ -67,3 +79,13 @@ This URI is http get request and show a json data:
 ![Legenda](https://raw.githubusercontent.com/pp5ere/AprsWeatherStation/master/esp-01_BMP280.png)
 
 All you need to do is build the circuit and record the program on esp-01
+
+# Telnet Debug with RemoteDebug
+
+If you have some problem, you can see what's happening inside your Esp-01 using telnet port. To do this, just access your favorite terminal and type:
+
+```
+$ telnet 192.168.1.35
+```
+
+You'll see the messages write into the code if you want know more about RemoteDebug, please click here https://github.com/JoaoLopesF/RemoteDebug

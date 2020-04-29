@@ -15,11 +15,12 @@ const char* ssid     = ""; //write your wifi connection name
 const char* password = ""; // write your wifi password
 float tempC, tempF, hum, pres, alt = -99;
 String TitlePage = "Gauge PP5ERE-13 WX"; //write your html title
+String Domain = "http://pp5ere.sytes.net:8000"; //put here your external domain or your fixed Ip if you want to access outside your network
 String msg = "";
 
-unsigned long tempoDecorrido = 0;
+unsigned long ElapsedTime = 0;
 
-//Telnet Configuration
+//Telnet Configuration from APRS server
 const String USER    = ""; //write your aprs callsign
 const String PAS     = ""; // write your aprs password
 const String LAT     = "2736.01S"; //write your latitude
@@ -40,11 +41,11 @@ void setup()
 {
   
     Debug.println("Start setup()");  
-    connectar();
+    startConnection();
     
     startBMP();
-  delay(10);
-  Debug.begin("PP5ERE"); // Initiaze the telnet server
+    delay(10);
+    Debug.begin("PP5ERE"); // Initiaze the telnet server
 
     Debug.setResetCmdEnabled(true); // Enable the reset command
 }
@@ -54,37 +55,37 @@ void loop()
 {
   if (WiFi.status() != WL_CONNECTED){
     Debug.println("Start WiFi.status() = !WL_CONNECTED");  
-    connectar();
+    startConnection();
   }
   //listen to client request
   server.handleClient();
   Debug.handle();
 
-  enviaAPRSporTempo(600000); //run every 10 minutes
+  sendAPRSPacketEvery(600000); //run every 10 minutes
   // Give a time for ESP
 
     yield();
 }
 
-void connectar(){
-  int tentativas = 0;
-  Debug.println("Try to connect(). Tentativa: "+String(tentativas));
+void startConnection(){
+  int count = 0;
+  Debug.println("Try to connect(). Tentativa: "+String(count));
   WiFi.mode(WIFI_STA);  
   WiFi.begin(ssid, password);
   Debug.println("Run: WiFi.begin(ssid, password);");  
-  while(WiFi.status() != WL_CONNECTED && tentativas < 100) {
-    Debug.println("Run: while(WiFi.status() != WL_CONNECTED && tentativas < 100)");
+  while(WiFi.status() != WL_CONNECTED && count < 100) {
+    Debug.println("Run: while(WiFi.status() != WL_CONNECTED && count < 100)");
     delay(500);
-    Debug.println("WiFi.status() = "+ String(WiFi.status())+"\nTry = "+String(tentativas)+"\n");
+    Debug.println("WiFi.status() = "+ String(WiFi.status())+"\nTry = "+String(count)+"\n");
     Debug.println("Try Connecting... ");
     if (WiFi.status() == WL_NO_SSID_AVAIL){
       Debug.println("WiFi.status() == WL_NO_SSID_AVAIL"+ String(WiFi.status())+ "\nReset\n");
       delay(5000);
       resetFunc();
     }
-    tentativas++;
+    count++;
   }
-  if (tentativas == 100 && WiFi.status() != WL_CONNECTED){
+  if (count == 100 && WiFi.status() != WL_CONNECTED){
     Debug.println("try == 100 && WiFi.status() != WL_CONNECTED\nReset...");
       delay(5000);
     resetFunc();
@@ -116,40 +117,40 @@ void connectar(){
   
 }
 
-void enviaAPRSporTempo(unsigned long t){
-  unsigned long tempoAtual;
-  tempoAtual = millis();
-  if (tempoAtual < tempoDecorrido){
-    Debug.println("Run: (tempoAtual = millis()) < tempoDecorrido.\ntempoAtual ="+String(tempoAtual)+"\ntempoDecorrido="+String(tempoDecorrido));
-    tempoDecorrido = 0;    
-    Debug.println("Set tempoDecorrido=0");
+void sendAPRSPacketEvery(unsigned long t){
+  unsigned long currentTime;
+  currentTime = millis();
+  if (currentTime < ElapsedTime){
+    Debug.println("Run: (currentTime = millis()) < ElapsedTime.\ncurrentTime ="+String(currentTime)+"\nElapsedTime="+String(ElapsedTime));
+    ElapsedTime = 0;    
+    Debug.println("Set ElapsedTime=0");
   }
-  if ((tempoAtual - tempoDecorrido) >= t){
-    Debug.println("Tried : (tempoAtual - tempoDecorrido) >= t.\ntempoAtual ="+String(tempoAtual)+"\ntempoDecorrido="+String(tempoDecorrido));
+  if ((currentTime - ElapsedTime) >= t){
+    Debug.println("Tried : (currentTime - ElapsedTime) >= t.\ncurrentTime ="+String(currentTime)+"\nElapsedTime="+String(ElapsedTime));
     clientConnectTelNet();
-    tempoDecorrido = tempoAtual;  
-    Debug.println("Set tempoDecorrido = tempoAtual");
+    ElapsedTime = currentTime;  
+    Debug.println("Set ElapsedTime = currentTime");
   }
 }
 
 void clientConnectTelNet(){
   WiFiClient client;
-  int tentativas = 0;
+  int count = 0;
   String packet, aprsauth, tempStr, humStr, presStr;
   Debug.println("Run clientConnectTelNet()");
   getDataFromBMP();
-  while (!client.connect(SERVER.c_str(), PORT) && tentativas <20){
+  while (!client.connect(SERVER.c_str(), PORT) && count <20){
     Debug.println("Didn't connect with server: "+String(SERVER)+" Port: "+String(PORT));
     delay (1000);
     client.stop();
     client.flush();
     Debug.println("Run client.stop");
     Debug.println("Trying to connect with server: "+String(SERVER)+" Port: "+String(PORT));
-    tentativas++;
-    Debug.println("Try: "+String(tentativas));
+    count++;
+    Debug.println("Try: "+String(count));
   }
-  if (tentativas == 20){
-    Debug.println("Tried: "+String(tentativas)+" don't send the packet!");
+  if (count == 20){
+    Debug.println("Tried: "+String(count)+" don't send the packet!");
   }else{
     Debug.println("Connected with server: "+String(SERVER)+" Port: "+String(PORT));
     tempStr = getTemp(tempF);
@@ -187,33 +188,29 @@ void clientConnectTelNet(){
 }
 
 void getDataFromBMP(){
-  int tentativas = 0;
+  int count = 0;
   tempC = bmp.readTempC();
   tempF = bmp.readTempF();
   hum = bmp.readFloatHumidity();
   pres = bmp.readFloatPressure();
   alt = bmp.readFloatAltitudeMeters();
   Debug.println("Read tempC="+String(tempC)+" tempF="+String(tempF)+" hum="+String(hum)+" pres="+String(pres)+" alt="+String(alt));
-  while ((isnan(tempC) || isnan(tempF) || isnan(pres) || isnan(hum) || isnan(alt) || hum == 0) && tentativas < 1000){
-    Debug.println("Read (isnan(tempC) || isnan(tempF) || isnan(pres) || isnan(hum) || isnan(alt) || hum == 0) && tentativas < 1000");
+  while ((isnan(tempC) || isnan(tempF) || isnan(pres) || isnan(hum) || isnan(alt) || hum == 0) && count < 1000){
+    Debug.println("Read (isnan(tempC) || isnan(tempF) || isnan(pres) || isnan(hum) || isnan(alt) || hum == 0) && count < 1000");
     tempC = bmp.readTempC();
     tempF = bmp.readTempF();
     hum = bmp.readFloatHumidity();
     pres = bmp.readFloatPressure();
     alt = bmp.readFloatAltitudeMeters();
-    Debug.println("Trying read again tempC="+String(tempC)+" tempF="+String(tempF)+" hum="+String(hum)+" pres="+String(pres)+" alt="+String(alt)+" Tentativas="+String(tentativas));
+    Debug.println("Trying read again tempC="+String(tempC)+" tempF="+String(tempF)+" hum="+String(hum)+" pres="+String(pres)+" alt="+String(alt)+" count="+String(count));
     
     delay(2);
-    tentativas++;
+    count++;
   }
 }
 void getJson(){
   getDataFromBMP();
   
-  /*if (tentativas == 1000 && (isnan(tempC) || isnan(tempF) || isnan(pres) || isnan(hum) || isnan(alt))){
-    tempC = tempF = hum = pres = alt = -99;
-    Debug.println("Não conseguiu ler valores do DHT");
-  }*/
   String json = "{\"TempC\":" + String(tempC) + 
                 ",\"TempF\":" + String(tempF) + 
                 ",\"Hum\":" + String(hum) + 
@@ -242,7 +239,7 @@ void getPage(){
   html += "        data-width=\"300\"\n";
   html += "        data-height=\"300\"\n";
   html += "        data-units=\"%\"\n";
-  html += "        data-title=\"Humidade\"\n";
+  html += "        data-title=\"Humidity\"\n";
   html += "        data-value=\"10\"\n";
   html += "        data-min-value=\"10\"\n";
   html += "        data-max-value=\"100\"\n";
@@ -333,7 +330,7 @@ void getPage(){
   html += "        data-width=\"300\"\n";
   html += "        data-height=\"300\"\n";
   html += "        data-units=\"hPa\"\n";
-  html += "        data-title=\"Pressão\"\n";
+  html += "        data-title=\"Pressure\"\n";
   html += "        data-value=\"960\"\n";
   html += "        data-min-value=\"960\"\n";
   html += "        data-max-value=\"1060\"\n";
@@ -385,7 +382,7 @@ void getPage(){
   html += "<script>\n";
   html += "var timers = [];\n";
   html += "function animateGauges() {\n";
-  html += "  var url = \"http://pp5ere.sytes.net:8000/weather\";\n";
+  html += "  var url = \"" + Domain + "/weather\";\n";
   html += "  document.getElementById(\"tempC\").setAttribute(\"data-value\", 0);\n";
   html += "    document.getElementById(\"hum\").setAttribute(\"data-value\", 10);\n";
   html += "    document.getElementById(\"pres\").setAttribute(\"data-value\", 960);\n";
@@ -501,7 +498,6 @@ String getPres(float pPress){
 void addLog(String pMsg){
   msg +=pMsg;
 }
-
 void getLog(){
   
   server.send (200, "application/json", msg);

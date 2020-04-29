@@ -20,8 +20,7 @@ The system get weather data from BME-280 module and send it to APRS server using
 sendAPRSPacketEvery(600000); //run every 10 minutes
 ```
 
-The weather data sent to the APRS network is shown at https://aprs.fi/#!lat=0&lng=0 
-The system has a html page that show the weather data in realtime and a web service that response is a json weather
+The weather data sent to the APRS network is shown at https://aprs.fi/#!lat=0&lng=0. The system has a html page that show the weather data in realtime and a web service that response is a json weather
 
 ## Details before record the code
 

@@ -57,28 +57,16 @@ const String SERVER  = "brazil.aprs2.net";
 const int    PORT    = 14579;
 ```
 
-If you want to check the weather data in real time, you need to set the variable "Domain" to your local Ip, same as main Ip
-
-```
-String Domain = "http://192.168.1.35";
-```
-
-You can access the main IP address in your favorite browser and check the weather page, as in the example below:
+If you want to check the weather data in real time, you can access the main IP address in your favorite browser and check the weather page, as in the example below:
 
 ```
 http://192.168.1.35
 ```
 
-If you want to access this page on the Web, you need to put your domain address or your fixed Ip
-
-```
-String Domain = "http://pp5ere.sytes.net:8000";
-```
-
 If you want to get data from ESP-01 to implement some application, you need access the URI weather. 
 
 ```
-http://192.168.1.35/weather or http://pp5ere.sytes.net:8000/weather
+http://192.168.1.35/weather
 ```
 
 This URI is http get request and show a json data:

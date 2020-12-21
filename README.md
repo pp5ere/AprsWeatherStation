@@ -14,7 +14,7 @@ This project creates a simple Aprs Weather Station for ham radio. In this projec
 
 # How the system works
 
-The system get weather data from BME-280 module and send it to APRS server using telnet connection every 10 minutes. If you want to change this time, change the value below:
+The system gets weather data from BME-280 module and sends it to APRS server using telnet connection every 10 minutes. If you want to change this time, change the value below:
 
 ```
 sendAPRSPacketEvery(600000); //run every 10 minutes

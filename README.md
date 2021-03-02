@@ -59,6 +59,7 @@ const int    PORT    = 14579;
 As we know, the APRS protocol uses Latitude and Longitude like:
 ```
 DDMM.hhN/DDDMM.hW
+
 where DDMM.hhN is Latitude
 DD are 2 digits for degrees
 MM are 2 digits for minutes

@@ -56,7 +56,22 @@ const String COMMENT = "APRS on ESP-01";
 const String SERVER  = "brazil.aprs2.net";
 const int    PORT    = 14579;
 ```
+As we know, the APRS protocol uses Latitude and Longitude like:
+```
+DDMM.hhN/DDDMM.hW
+where DDMM.hhN is Latitude
+DD are 2 digits for degrees
+MM are 2 digits for minutes
+hh are 2 digits for hundreds of minutes
+N is 1 digit for North or South(N, S)
 
+where DDDMM.hW is Longitude
+DDD are 3 digits for degrees
+MM are 2 digits for minutes
+hh are 2 digits for hundreds of minutes
+W is 1 digit for East or West(E, W)
+
+```
 If you want to check the weather data in real time, you can access the main IP address in your favorite browser and check the weather page, as in the example below:
 
 ```

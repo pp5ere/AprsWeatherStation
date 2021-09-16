@@ -457,6 +457,13 @@ String getHum(float pHum){
   case 2:
     return strHum;
     break;
+  case 3:
+    if (intHum == 100){
+       return "00";
+    }else {
+       return "-99";
+    }
+    break;
   default:
     return "-99";
   }

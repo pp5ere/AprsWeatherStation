@@ -66,7 +66,7 @@ MM are 2 digits for minutes
 hh are 2 digits for hundreds of minutes
 N is 1 digit for North or South(N, S)
 
-where DDDMM.hW is Longitude
+where DDDMM.hhW is Longitude
 DDD are 3 digits for degrees
 MM are 2 digits for minutes
 hh are 2 digits for hundreds of minutes
